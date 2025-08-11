@@ -3,6 +3,7 @@ package flxjrllc.javaspringboot.employee_service.service.impl;
 import flxjrllc.javaspringboot.employee_service.dto.APIResponseDto;
 import flxjrllc.javaspringboot.employee_service.dto.DepartmentDto;
 import flxjrllc.javaspringboot.employee_service.dto.EmployeeDto;
+import flxjrllc.javaspringboot.employee_service.dto.OrganizationDto;
 import flxjrllc.javaspringboot.employee_service.entity.Employee;
 import flxjrllc.javaspringboot.employee_service.mapper.EmployeeMapper;
 import flxjrllc.javaspringboot.employee_service.repository.EmployeeRepository;
@@ -61,11 +62,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 //        DepartmentDto departmentDto = apiClient.getDepartment(employee.getDepartmentCode());
 
+        OrganizationDto organizationDto = webClient.get()
+                .uri("http://localhost:8083/api/organizations/" + employee.getOrganizationCode())
+                .retrieve()
+                .bodyToMono(OrganizationDto.class)
+                .block();
+
         EmployeeDto employeeDto = EmployeeMapper.mapToEmployeeDto(employee);
 
         APIResponseDto apiResponseDto = new APIResponseDto();
         apiResponseDto.setEmployee(employeeDto);
         apiResponseDto.setDepartment(departmentDto);
+        apiResponseDto.setOrganization(organizationDto);
 
         return apiResponseDto;
 
